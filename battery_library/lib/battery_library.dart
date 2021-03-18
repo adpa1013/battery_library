@@ -1,11 +1,9 @@
-
 import 'dart:async';
 
 import 'package:flutter/services.dart';
 
 class BatteryLibrary {
-  static const MethodChannel _channel =
-      const MethodChannel('battery_library');
+  static const MethodChannel _channel = const MethodChannel('battery_library');
 
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');
