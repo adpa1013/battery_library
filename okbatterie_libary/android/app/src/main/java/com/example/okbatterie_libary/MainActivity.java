@@ -1,4 +1,4 @@
-package com.example.batterylevel;
+package com.example.okbatterie_libary;
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity;
@@ -24,10 +24,10 @@ public class MainActivity extends FlutterActivity {
                    (call, result) -> {
             // Note: this method is invoked on the main thread.
             if (call.method.equals("getBatteryLevel")) {
-              int batteryLevel = getBatteryLevel();
+              int okbatterie_libary = getBatteryLevel();
 
-              if (batteryLevel != -1) {
-                result.success(batteryLevel);
+              if (okbatterie_libary != -1) {
+                result.success(okbatterie_libary);
               } else {
                 result.error("UNAVAILABLE", "Battery level not available.", null);
               }
@@ -39,18 +39,18 @@ public class MainActivity extends FlutterActivity {
         );
   }
     private int getBatteryLevel() {
-    int batteryLevel = -1;
+    int okbatterie_libary = -1;
     if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
       BatteryManager batteryManager = (BatteryManager) getSystemService(BATTERY_SERVICE);
-      batteryLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+      okbatterie_libary = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
     } else {
       Intent intent = new ContextWrapper(getApplicationContext()).
           registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-      batteryLevel = (intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) * 100) /
+      okbatterie_libary = (intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) * 100) /
           intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
     }
 
-    return batteryLevel;
+    return okbatterie_libary;
   }
 
 }
