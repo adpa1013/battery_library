@@ -9,10 +9,12 @@
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 #include <flutter/standard_method_codec.h>
-
+#include <windows.h>
 #include <map>
 #include <memory>
 #include <sstream>
+#include <string.h>
+#include <iostream>
 
 namespace {
 
@@ -57,16 +59,13 @@ void BatteryLibraryPlugin::HandleMethodCall(
     const flutter::MethodCall<flutter::EncodableValue> &method_call,
     std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
   if (method_call.method_name().compare("getPlatformVersion") == 0) {
-    std::ostringstream version_stream;
-    version_stream << "Windows ";
-    if (IsWindows10OrGreater()) {
-      version_stream << "10+";
-    } else if (IsWindows8OrGreater()) {
-      version_stream << "8";
-    } else if (IsWindows7OrGreater()) {
-      version_stream << "7";
-    }
-    result->Success(flutter::EncodableValue(version_stream.str()));
+    SYSTEM_POWER_STATUS spsPwr;
+	if (GetSystemPowerStatus(&spsPwr))
+	{
+    std::string battery_state = std::to_string(static_cast<double>(spsPwr.BatteryLifePercent));
+    result->Success(flutter::EncodableValue(battery_state));
+  } 
+    
   } else {
     result->NotImplemented();
   }
