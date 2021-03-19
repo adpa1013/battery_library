@@ -27,8 +27,7 @@ public class BatteryLibraryPlugin: NSObject, FlutterPlugin {
         let capacity = info[kIOPSCurrentCapacityKey] as? Int,
         let max = info[kIOPSMaxCapacityKey] as? Int {
         result(String(capacity))
-        print("\(name): \(capacity) of \(max)")
-        }
+      }
     }
   }
 }
