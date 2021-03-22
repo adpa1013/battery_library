@@ -14,11 +14,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _batteryLevel = -1;
+  int _batteryState = -1;
 
   @override
   void initState() {
     super.initState();
     updateBatteryLevel();
+    updateBatteryState();
   }
 
   Future<void> updateBatteryLevel() async {
@@ -34,6 +36,19 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+    Future<void> updateBatteryState() async {
+    int batteryState;
+    try {
+      batteryState = await BatteryLibrary.batteryState;
+    } on Exception {
+      batteryState = -1;
+    }
+
+    setState(() {
+      _batteryState = batteryState;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -45,6 +60,9 @@ class _MyAppState extends State<MyApp> {
           children: [
             Center(
               child: Text('Power left: $_batteryLevel'),
+            ),
+            Center(
+              child: Text('Battery State: $_batteryState'),
             ),
           ],
         ),
