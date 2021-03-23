@@ -62,22 +62,62 @@ namespace
       const flutter::MethodCall<flutter::EncodableValue> &method_call,
       std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result)
   {
-    if (method_call.method_name().compare("getPlatformVersion") == 0)
+    if (method_call.method_name().compare("getBatteryLevel") == 0)
     {
       SYSTEM_POWER_STATUS spsPwr;
       if (GetSystemPowerStatus(&spsPwr))
       {
-        std::string battery_state = std::to_string(static_cast<double>(spsPwr.BatteryLifePercent));
-        result->Success(flutter::EncodableValue(battery_state));
+        int battery_life = static_cast<int>(spsPwr.BatteryLifePercent);
+        result->Success(flutter::EncodableValue(battery_life));
       }
     }
     else
     {
-      result->NotImplemented();
+      if (method_call.method_name().compare("getBatteryState") == 0)
+      {
+        SYSTEM_POWER_STATUS spsPwr;
+        if (GetSystemPowerStatus(&spsPwr))
+        {
+          int battery_state = (static_cast<int>(spsPwr.BatteryFlag));
+          switch (battery_state)
+          {
+          //charging
+          case 8:
+            result->Success(flutter::EncodableValue(2));
+            break;
+            //discharging
+
+          case 1:
+            if (static_cast<int>(spsPwr.BatteryLifePercent) == 100)
+            {
+              //full
+              result->Success(flutter::EncodableValue(4));
+            }
+            else
+            {
+              //discharging
+              result->Success(flutter::EncodableValue(3));
+            }
+            break;
+          //discharging
+          case 2:
+            result->Success(flutter::EncodableValue(3));
+            break;
+          //discharging
+          case 4:
+            result->Success(flutter::EncodableValue(3));
+            break;
+          //unknown
+          default:
+            result->Success(flutter::EncodableValue(1));
+            break;
+          }
+        }
+        result->NotImplemented();
+      }
     }
   }
-
-} 
+}
 
 void BatteryLibraryPluginRegisterWithRegistrar(
     FlutterDesktopPluginRegistrarRef registrar)
