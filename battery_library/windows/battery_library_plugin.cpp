@@ -67,8 +67,8 @@ namespace
       SYSTEM_POWER_STATUS spsPwr;
       if (GetSystemPowerStatus(&spsPwr))
       {
-        int battery_life = static_cast<int>(spsPwr.BatteryLifePercent);
-        result->Success(flutter::EncodableValue(battery_life));
+        int batterylevel = static_cast<int>(spsPwr.BatteryLifePercent);
+        result->Success(flutter::EncodableValue(batterylevel));
       }
     }
     else
