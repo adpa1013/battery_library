@@ -78,38 +78,28 @@ namespace
         SYSTEM_POWER_STATUS spsPwr;
         if (GetSystemPowerStatus(&spsPwr))
         {
-          int battery_state = (static_cast<int>(spsPwr.BatteryFlag));
+          int battery_state = (static_cast<int>(spsPwr.ACLineStatus));
           switch (battery_state)
           {
           //charging
-          case 8:
-            result->Success(flutter::EncodableValue(2));
-            break;
-            //discharging
-
           case 1:
             if (static_cast<int>(spsPwr.BatteryLifePercent) == 100)
             {
-              //full
               result->Success(flutter::EncodableValue(4));
             }
             else
             {
-              //discharging
-              result->Success(flutter::EncodableValue(3));
+              result->Success(flutter::EncodableValue(2));
             }
             break;
+
           //discharging
-          case 2:
-            result->Success(flutter::EncodableValue(3));
-            break;
-          //discharging
-          case 4:
+          case 0:
             result->Success(flutter::EncodableValue(3));
             break;
           //unknown
           default:
-            result->Success(flutter::EncodableValue(1));
+            result->Success(flutter::EncodableValue(5));
             break;
           }
         }
