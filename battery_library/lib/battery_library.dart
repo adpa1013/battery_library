@@ -9,4 +9,9 @@ class BatteryLibrary {
     final int batteryLevel = await _channel.invokeMethod('getBatteryLevel');
     return batteryLevel;
   }
+
+    static Future<int> get batteryState async {
+    final int batteryState = await _channel.invokeMethod('getBatteryState');
+    return batteryState;
+  }
 }

@@ -9,14 +9,26 @@ public class SwiftBatteryLibraryPlugin: NSObject, FlutterPlugin {
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-      let device = UIDevice.current
-      device.isBatteryMonitoringEnabled = true
-      if device.batteryState == UIDevice.BatteryState.unknown {
-        result(FlutterError(code: "UNAVAILABLE",
-                        message: "Battery info unavailable",
-                        details: nil))
-      } else {
+
+    switch call.method {
+    case "getBatteryLevel":
+        let device = UIDevice.current
+        device.isBatteryMonitoringEnabled = true
+        if device.batteryState == UIDevice.BatteryState.unknown {
+          result(-1)
+        } else {
         result(Int(device.batteryLevel * 100))
-      }
+        }
+    case "getBatteryState":
+        let device = UIDevice.current
+        device.isBatteryMonitoringEnabled = true
+        if device.batteryState == UIDevice.BatteryState.unknown {
+          result(-a)
+        } else {
+          result(device.batteryState) // 2 => Charging
+        }
+    default:
+      result(FlutterMethodNotImplemented)
+    }
   }
 }
