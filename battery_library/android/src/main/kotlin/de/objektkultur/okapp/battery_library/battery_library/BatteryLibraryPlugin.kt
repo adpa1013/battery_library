@@ -35,13 +35,10 @@ class BatteryLibraryPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
  
      if (call.method == "getBatteryLevel") {
-      if (getBatteryLevel() != -1) {
+       
         result.success(getBatteryLevel())
-      } else {
-        result.error("UNAVAILABLE", "Battery level not available.", null)
-      }
     }
-     else if(call.method == "getBatteryState") {
+      if(call.method == "getBatteryState") {
       
     result.success(getBatteryState())
     }
