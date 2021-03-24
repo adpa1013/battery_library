@@ -33,10 +33,8 @@ class BatteryLibraryPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-    if (call.method == "getPlatformVersion") {
-      result.success("Android ${android.os.Build.VERSION.RELEASE}")
-    }
-    else if (call.method == "getBatteryLevel") {
+ 
+     if (call.method == "getBatteryLevel") {
       val batteryLevel = getBatteryLevel()
       if (batteryLevel != -1) {
         result.success(batteryLevel)
@@ -44,10 +42,24 @@ class BatteryLibraryPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         result.error("UNAVAILABLE", "Battery level not available.", null)
       }
     }
+     else if(call.method == "getBatteryState") {
+      
+    result.success(getBatteryState())
+    }
     else {
       result.notImplemented()
-    }
+    } 
   }
+
+  private fun getBatteryState(): Int {
+    val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
+    context.registerReceiver(null, ifilter)}
+    val status: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
+    if(status != null) {
+      return status
+    }
+    else { return 6 }
+    } 
 
   private fun getBatteryLevel(): Int {
     val batteryLevel: Int
