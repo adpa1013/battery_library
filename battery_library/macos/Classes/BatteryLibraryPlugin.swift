@@ -11,23 +11,40 @@ public class BatteryLibraryPlugin: NSObject, FlutterPlugin {
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    // Take a snapshot of all the power source info
-    let snapshot = IOPSCopyPowerSourcesInfo().takeRetainedValue()
 
-    // Pull out a list of power sources
-    let sources = IOPSCopyPowerSourcesList(snapshot).takeRetainedValue() as Array
+    switch call.method {
+    case "getBatteryLevel":
+      // Take a snapshot of all the power source info
+      let snapshot = IOPSCopyPowerSourcesInfo().takeRetainedValue()
+      // Pull out a list of power sources
+      let sources = IOPSCopyPowerSourcesList(snapshot).takeRetainedValue() as Array
 
-    // For each power source...
-    for ps in sources {
-      // Fetch the information for a given power source out of our snapshot
-      let info = IOPSGetPowerSourceDescription(snapshot, ps).takeUnretainedValue() as! [String: AnyObject]
-
-      // Pull out the name and capacity
-      if let name = info[kIOPSNameKey] as? String,
-        let capacity = info[kIOPSCurrentCapacityKey] as? Int,
-        let max = info[kIOPSMaxCapacityKey] as? Int {
-        result(String(capacity))
+      // For each power source...
+      for ps in sources {
+        // Fetch the information for a given power source out of our snapshot
+        let info = IOPSGetPowerSourceDescription(snapshot, ps).takeUnretainedValue() as! [String: AnyObject]
+        // Pull out the name and capacity
+        if let capacity = info[kIOPSCurrentCapacityKey] as? Int {
+          result(capacity)
+        }
       }
+    case "getBatteryState":
+      // Take a snapshot of all the power source info
+      let snapshot = IOPSCopyPowerSourcesInfo().takeRetainedValue()
+      // Pull out a list of power sources
+      let sources = IOPSCopyPowerSourcesList(snapshot).takeRetainedValue() as Array
+
+      // For each power source...
+      for ps in sources {
+        // Fetch the information for a given power source out of our snapshot
+        let info = IOPSGetPowerSourceDescription(snapshot, ps).takeUnretainedValue() as! [String: AnyObject]
+        // Pull out the name and capacity
+        if let charging = info[kIOPSIsChargingKey] as? Int {
+            result(charging)
+        }
+      }
+    default:
+      result(FlutterMethodNotImplemented)
     }
   }
 }
