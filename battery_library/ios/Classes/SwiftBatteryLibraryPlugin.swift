@@ -23,7 +23,7 @@ public class SwiftBatteryLibraryPlugin: NSObject, FlutterPlugin {
         let device = UIDevice.current
         device.isBatteryMonitoringEnabled = true
         if device.batteryState == UIDevice.BatteryState.unknown {
-          result(-a)
+          result(-1)
         } else {
           result(device.batteryState) // 2 => Charging
         }
